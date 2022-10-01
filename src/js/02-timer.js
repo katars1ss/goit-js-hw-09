@@ -45,6 +45,8 @@ refs.fields.forEach((field) => {
 refs.values.forEach((value) => {
     value.style.fontWeight = '400';
     value.style.fontSize = '40px';
+    value.style.paddingLeft = '8px';
+    value.style.paddingRight = '8px';
 });
 refs.labels.forEach((label) => {
     label.style.fontWeight = '500';
@@ -52,23 +54,25 @@ refs.labels.forEach((label) => {
     label.style.textTransform = 'uppercase';
 });
 
-//---------functional---------//
+//---------Program---------//
 
-let selectedDate = 0;
-    deltaTime = 0;
-    startTime = 0;
+let selectedDate = 0,
+    deltaTime = 0,
+    startTime = 0,
     currentTime = 0;
 
 function checkTime() { 
     startTime = selectedDate.getTime();
     currentTime = Date.now();
-    deltaTime = startTime - currentTime;
-    console.log('deltaTime', deltaTime);
     if (startTime <= currentTime) {
         Notiflix.Notify.failure('Please choose a date in the future');
         return
-    };
-    refs.startBtn.style.opacity = '1';
+    }
+    deltaTime = startTime - currentTime;
+    console.log('deltaTime', deltaTime);
+    if (!timer.isActive) {
+        refs.startBtn.style.opacity = 1;
+    }
 }
 
 const options = {
@@ -88,25 +92,27 @@ const timer = {
     isActive: false,
 
     start() {
-        if (this.isActive || deltaTime < 0) {
+        if (this.isActive || deltaTime <= 1000) {
             return;
-        };
+        }
+        this.isActive = true;
+        refs.startBtn.style.opacity = 0.55;
 
-
-        let timer = setInterval(() => {
-            console.log(Math.round(deltaTime / 1000))
+        let timerInterval = setInterval(() => {
             deltaTime -= 1000;
+            //console.log(Math.round(deltaTime / 1000))
             const { days, hours, minutes, seconds } = convertMs(deltaTime);
-            if (Math.round(deltaTime / 1000) == 0) {
-                clearInterval(timer);
+            updateTimerValue({ days, hours, minutes, seconds })
+            if (Math.floor(deltaTime / 1000) == 0) {
+                this.isActive = false;
+                clearInterval(timerInterval);
                 Notiflix.Notify.success('Time is up!');
-                refs.startBtn.style.opacity = '0.55';
                 return;
             };
-            updateTimerValue({ days, hours, minutes, seconds })
         }, 1000);
     },
 };
+
 refs.startBtn.addEventListener('click', () => {
     timer.start();
 });
