@@ -55,6 +55,21 @@ refs.labels.forEach((label) => {
 //---------functional---------//
 
 let selectedDate = 0;
+    deltaTime = 0;
+    startTime = 0;
+    currentTime = 0;
+
+function checkTime() { 
+    startTime = selectedDate.getTime();
+    currentTime = Date.now();
+    deltaTime = startTime - currentTime;
+    console.log('deltaTime', deltaTime);
+    if (startTime <= currentTime) {
+        Notiflix.Notify.failure('Please choose a date in the future');
+        return
+    };
+    refs.startBtn.style.opacity = '1';
+}
 
 const options = {
     enableTime: true,
@@ -63,33 +78,31 @@ const options = {
     minuteIncrement: 1,
     onClose(selectedDates) {
         selectedDate = selectedDates[0];
-        
+        checkTime()
     },
 };
 flatpickr(refs.dateInput, options);
 const flatpickr = require("flatpickr");
 
 const timer = {
-    isActiv: false,
+    isActive: false,
 
     start() {
-        if (this.isActiv) {
+        if (this.isActive || deltaTime < 0) {
             return;
         };
 
-        const startTime = selectedDate.getTime();
-        const currentTime = Date.now();
-        let deltaTime = startTime - currentTime ;
-        if (startTime <= currentTime) {
-            Notiflix.Notify.failure('Memento te hominem esse');
-            return
-            };
-        setInterval(() => {
+
+        let timer = setInterval(() => {
+            console.log(Math.round(deltaTime / 1000))
             deltaTime -= 1000;
-            //console.log('deltaTime', deltaTime);
             const { days, hours, minutes, seconds } = convertMs(deltaTime);
-            //console.log(convertMs(deltaTime));
-            //console.log(`${days}:${hours}:${minutes}:${seconds}`);
+            if (Math.round(deltaTime / 1000) == 0) {
+                clearInterval(timer);
+                Notiflix.Notify.success('Time is up!');
+                refs.startBtn.style.opacity = '0.55';
+                return;
+            };
             updateTimerValue({ days, hours, minutes, seconds })
         }, 1000);
     },
