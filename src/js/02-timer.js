@@ -74,8 +74,8 @@ let selectedDate = 0,
         },
     };
     
-flatpickr(refs.dateInput, options);
-const flatpickr = require("flatpickr");
+    //const flatpickr = require("flatpickr");
+    flatpickr(refs.dateInput, options);
 
 //--------------//
 
