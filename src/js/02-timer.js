@@ -72,10 +72,9 @@ let selectedDate = 0,
             selectedDate = selectedDates[0];
             checkTime()
         },
-    };
-    
-    //const flatpickr = require("flatpickr");
-    flatpickr(refs.dateInput, options);
+};
+
+flatpickr(refs.dateInput, options);
 
 //--------------//
 
