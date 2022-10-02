@@ -61,6 +61,24 @@ let selectedDate = 0,
     startTime = 0,
     currentTime = 0;
 
+//-----------flatpickr----------//
+
+    const options = {
+        enableTime: true,
+        time_24hr: true,
+        defaultDate: new Date(),
+        minuteIncrement: 1,
+        onClose(selectedDates) {
+            selectedDate = selectedDates[0];
+            checkTime()
+        },
+    };
+    
+    flatpickr(refs.dateInput, options);
+const flatpickr = require("flatpickr");
+
+//--------------//
+
 function checkTime() { 
     startTime = selectedDate.getTime();
     currentTime = Date.now();
@@ -72,21 +90,10 @@ function checkTime() {
     console.log('deltaTime', deltaTime);
     if (!timer.isActive) {
         refs.startBtn.style.opacity = 1;
-    }
-}
-
-const options = {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-        selectedDate = selectedDates[0];
-        checkTime()
-    },
+    };
 };
-flatpickr(refs.dateInput, options);
-const flatpickr = require("flatpickr");
+
+//---------------//
 
 const timer = {
     isActive: false,
@@ -113,9 +120,13 @@ const timer = {
     },
 };
 
+//-------------EventListener-----------//
+
 refs.startBtn.addEventListener('click', () => {
     timer.start();
 });
+
+//---------------//
 
 function addLeadingZero(value) {
     return String(value).padStart(2, '0');
@@ -141,6 +152,8 @@ function convertMs(ms) {
 
     return { days, hours, minutes, seconds };
 };
+
+//--------------//
 
 function updateTimerValue({ days, hours, minutes, seconds }) {
     refs.seconds.textContent = seconds;
