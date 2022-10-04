@@ -31,8 +31,6 @@ const handleSubmit = (evt) => {
   let delay = Number(evt.currentTarget.delay.value),
       step = Number(evt.currentTarget.step.value),
       amount = Number(evt.currentTarget.amount.value);
-      // step = parseInt(refs.fieldOfStep.value),
-      // amount = parseInt(refs.fieldOfAmount.value);
   console.log('delay', delay);
   console.log('step', step);
   console.log('amount', amount);
@@ -40,7 +38,6 @@ const handleSubmit = (evt) => {
     for (let i = 0; i < amount; i++) {
       createPromise(i + 1, delay);
       step = Number(evt.currentTarget.step.value);
-      console.log('step', step);
       delay += step;
     };
 };
